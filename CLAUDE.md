@@ -8,6 +8,14 @@ Before any non-trivial code, simulation, controller, or parameter change, Claude
 
 Key rule: write or update the module contract and verification plan first, then change code. If this file conflicts with `项目维护协议.md`, the shared protocol wins unless the user explicitly says otherwise.
 
+## Project Memory
+
+- The user has accepted `项目维护协议.md` as the shared maintenance protocol for both Codex and Claude.
+- For this project, non-trivial work must proceed as: contract/plan -> code -> verification -> commit/push when requested.
+- Current Git remote: `https://github.com/Ayanamni/micro_mouse.git`, branch `main`.
+- Do not force-push or rewrite history unless the user explicitly asks.
+- Current controller roadmap is paused at the planning boundary: next implementation work starts from `控制器方案报告.md` section 24 and `gpt计划.md` section "2026-06-28 修订计划"; do not implement TD/DOB/controller rewrites until the user resumes that work.
+
 ## Project Overview
 
 MuJoCo-based physics simulation for a high-speed line-following micromouse (超高速巡线电子鼠) — Japanese Robotrace negative-pressure differential-drive design. Goal: validate control algorithms in simulation before deploying to TC387 hardware.
