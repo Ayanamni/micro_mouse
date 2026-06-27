@@ -4,26 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Mandatory Maintenance Protocol
 
-Before any non-trivial code, simulation, controller, or parameter change, Claude must read and follow `项目维护协议.md`.
+Every round, Claude must read `项目维护协议.md` section 0 only. Read the rest of `项目维护协议.md` only when adding a module, resolving a conflict, diagnosing repeated failure, or changing process rules.
 
-Key rule: write or update the module contract and verification plan first, then change code. If this file conflicts with `项目维护协议.md`, the shared protocol wins unless the user explicitly says otherwise.
+Key rule: write the 6-line execution state first, make one type of change, run required verification, then record the result. If this file conflicts with `项目维护协议.md`, the shared protocol wins unless the user explicitly says otherwise.
 
-## Project Memory
+## Current Snapshot
 
-- The user has accepted `项目维护协议.md` as the shared maintenance protocol for both Codex and Claude.
-- For this project, non-trivial work must proceed as: contract/plan -> code -> verification -> commit/push when requested.
-- Current Git remote: `https://github.com/Ayanamni/micro_mouse.git`, branch `main`.
-- Do not force-push or rewrite history unless the user explicitly asks.
-- Current controller roadmap is paused at the planning boundary: next implementation work starts from `控制器方案报告.md` section 24 and `gpt计划.md` section "2026-06-28 修订计划"; do not implement TD/DOB/controller rewrites until the user resumes that work.
-- If asked to run continuously until the controller is complete, follow `项目维护协议.md` section 7: write the 6-line execution state each round, make one type of change at a time, run required verification, and switch to diagnosis after repeated non-improvement.
+- Shared protocol: `项目维护协议.md`.
+- Remote: `https://github.com/Ayanamni/micro_mouse.git`, branch `main`; do not force-push unless explicitly asked.
+- Active path: `control_core.vw_omega_step` / `vw_control_tick`, not legacy `control_core.step`.
+- Continuous execution must satisfy response-speed gates: rise time, settling time, overshoot, steady-state error, and closed-loop bandwidth.
+- Line-following `eval_vw.py single/sweep` remains paused until the user clearly releases that constraint.
 
 ## Project Overview
 
 MuJoCo-based physics simulation for a high-speed line-following micromouse (超高速巡线电子鼠) — Japanese Robotrace negative-pressure differential-drive design. Goal: validate control algorithms in simulation before deploying to TC387 hardware.
 
 **Current phase**: v/ω decoupled controller + realistic photodiode line-following. Planning/perception deferred.
-**Controller architecture**: C++ `VWController` (OmegaLoop @5kHz + VelocityLoop @1kHz + TrackingController @1kHz) → torque mix τ_L=τ_v−τ_ω, τ_R=τ_v+τ_ω → motor model → MuJoCo.
-**Active control path**: `workbench.py` uses `control_core.vw_omega_step` / `vw_control_tick` (NOT legacy `control_core.step`).
+**Controller architecture**: C++ `VWController` (OmegaLoop @5kHz + 5kHz yaw-priority duty refresh, VelocityLoop @1kHz + TrackingController @1kHz) → torque mix τ_L=τ_v−τ_ω, τ_R=τ_v+τ_ω → motor model → MuJoCo.
+**Active control path**: `workbench.py` uses `control_core.vw_omega_step` / `vw_control_tick` (NOT legacy `control_core.step`). `vw_omega_step` now returns the latest `{u_L,u_R,...}` and Python loops apply that 5kHz duty update.
 
 ## Quick Start
 
@@ -39,9 +38,9 @@ python scripts/workbench.py                          # 仪表盘模式
 python scripts/workbench.py --viewer-only --duration 15  # 3D巡线
 python scripts/workbench.py --no-render --speed 2.0 --duration 10  # 无头测试
 
-# Headless evaluation (v/ω path metrics — USE THIS FOR DEBUG)
-python scripts/eval_vw.py single --track 2019kansai --speed 3.5 --duration 12
-python scripts/eval_vw.py sweep --track 2019kansai --speed-min 1.0 --speed-max 5.0
+# Headless evaluation (v/ω path metrics — line-following single/sweep currently paused by user constraint)
+# python scripts/eval_vw.py single --track 2019kansai --speed 3.5 --duration 12
+# python scripts/eval_vw.py sweep --track 2019kansai --speed-min 1.0 --speed-max 5.0
 python scripts/eval_vw.py omega-step --track 2019kansai --speed 1.0 --omega-step-value 5.0
 ```
 
@@ -89,8 +88,8 @@ cpp/
 2. `PhysicsEngine` loads XML, wraps `mjModel`/`mjData`
 3. Each `step()` applies external forces (downforce + Coulomb skirt friction), then `mj_step()`
 4. Sensors: IMU (gyro+accel), encoders (jointpos), framepos/quat/linvel/angvel
-5. **5kHz**: IMU accumulate → average → `localize_core.imu_step` + `push_imu` → `control_core.vw_omega_step(gyro_z, dt)` → OmegaLoop updates τ_ω
-6. **1kHz**: `push_encoder` → `read_pose` → line_sensor.read() → `control_core.vw_control_tick(lat_err, curvature, v_fwd, v_ref, dt)` → {u_L, u_R, throttle, steer, tau_v, tau_omega}
+5. **5kHz**: IMU accumulate → average → `localize_core.imu_step` + `push_imu` → `vw_set_wheel_omega()` → `control_core.vw_omega_step(gyro_z, dt)` → OmegaLoop updates τ_ω and refreshes {u_L, u_R} using held τ_v
+6. **1kHz**: `push_encoder` → `read_pose` → line_sensor.read() → `control_core.vw_control_tick(lat_err, curvature, v_fwd, v_cmd, dt)` → updates v loop / τ_v and current command state
 7. Control: `set_control(tau_L, tau_R)` through motor model → `data.ctrl`
 
 Legacy `control_core.step()` path is A/B comparison only — NOT the active control path.
