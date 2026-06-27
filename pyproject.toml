@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "micromouse_sim"
+version = "0.1.0"
+description = "MuJoCo-based high-speed micromouse racing simulation"
+requires-python = ">=3.10"
+dependencies = [
+    "mujoco>=3.0",
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pyyaml>=6.0",
+    "h5py>=3.8",
+    "matplotlib>=3.7",
+]

@@ -1,0 +1,34 @@
+name: '01'
+saved_at: '2026-06-19 16:49:50'
+params:
+  track: 2019kansai
+  target_speed: 1.0
+  track_width: 0.2
+  lat_Kp: 4.5
+  lat_Kd: 1.1
+  lat_Ki: 0.1
+  lat_Kff: 0.0
+  lat_ema_alpha: 0.25
+  spd_Kp: 0.0
+  spd_Ki: 0.5
+  sigma_accel: 0.01
+  sigma_enc_dist: 0.00025
+  thresh_lon: 0.1
+  thresh_lat: 0.5
+  k_slip: 0.3
+  downforce: 6.0
+  skirt_mu: 0.05
+  skirt_R: 0.03
+  surface_bumps: true
+  bump_amplitude: 0.15
+  friction_var: true
+  friction_var_amplitude: 0.1
+  friction_degrade: false
+  degrade_rate: 0.004
+  ideal_motor: false
+  sensor_n_leds: 16
+  sensor_half_span: 0.07
+  sensor_line_width: 0.02
+  sensor_fwd_offset: 0.06
+  buffer_seconds: 20.0
+  dashboard_hz: 20.0

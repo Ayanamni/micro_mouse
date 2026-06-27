@@ -1,0 +1,40 @@
+# Python cache / local env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# C++ / CMake / Visual Studio build outputs
+cpp/build/
+build/
+CMakeFiles/
+CMakeCache.txt
+*.obj
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.dll
+*.exe
+*.pyd
+*.vcxproj.user
+
+# Generated simulation outputs and temporary reports
+output/
+*.log
+MUJOCO_LOG.TXT
+test_output.log
+scripts/omega_bandwidth.png
+bench_*.json
+bench_results*.json
+
+# Local OS/editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+nul
+
+# Keep source, docs, configs, MJCF models, and scripts tracked.

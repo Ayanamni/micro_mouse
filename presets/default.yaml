@@ -1,0 +1,20 @@
+# Default preset — 3.0 m/s on robotena track (tuned 2026-06-19)
+name: "default"
+saved_at: "2026-06-19"
+params:
+  track: robotena
+  target_speed: 3.0
+  lat_Kp: 60.0
+  lat_Kd: 20.0
+  lat_Ki: 0.3
+  lat_Kff: 0.25
+  spd_Kp: 3.0
+  spd_Ki: 0.8
+  sigma_accel: 0.01
+  sigma_enc_dist: 0.0002
+  thresh_lon: 0.25
+  thresh_lat: 2.0
+  k_slip: 0.5
+  ideal_motor: false
+  buffer_seconds: 20.0
+  dashboard_hz: 30.0

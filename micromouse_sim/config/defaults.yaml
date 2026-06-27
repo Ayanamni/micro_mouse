@@ -1,0 +1,98 @@
+# Micromouse Simulation Default Configuration
+# All values in SI units unless noted otherwise.
+
+physics:
+  timestep: 2.0e-5           # 50 kHz (20 µs per step)
+  gravity: [0, 0, -9.81]
+  pitch_damping: 0.001        # Nm/(rad/s), stabilises pitch oscillation
+  roll_damping: 0.001         # Nm/(rad/s), stabilises roll oscillation
+
+vehicle:
+  chassis_mass: 0.090         # kg (90g chassis)
+  wheel_mass: 0.0035          # kg (3.5g each)
+  wheel_radius: 0.0105        # m (21mm diameter)
+  wheel_width: 0.004          # m
+  wheelbase: 0.050            # m (lateral, between drive wheels)
+  body_length: 0.055          # m (shorter, front-back)
+  body_width: 0.075           # m (wider, left-right)
+  body_height: 0.015          # m (lower profile)
+  chassis_z: 0.012            # m, initial chassis height
+  com_z: -0.004               # m, COM offset from chassis origin
+
+downforce:
+  enabled: true
+  force: 5.0                  # N (~500g)
+
+drag:
+  linear: 0.05                # N/(m/s), skirt seal viscous drag
+  coulomb: 0.02               # N, skirt seal static friction
+
+motor:
+  R: 0.344                    # Ohm (phase-to-phase, ECX SPEED 13 L 18V)
+  L: 1.28e-5                  # H (0.0128 mH)
+  Kt: 0.00241                 # Nm/A
+  Ke: 0.00241                 # V/(rad/s) = 1 / speed_constant
+  gear_ratio: 4.0             # Planetary gearhead
+  efficiency: 0.88            # Typical for small planetary gearhead
+  V_bus: 18.0                 # V (5S LiPo nominal)
+  I_cont: 3.22                # A (continuous / nominal)
+  I_peak: 10.0                # A (short-duration burst)
+  rotor_inertia: 3.15e-8      # kg·m² (rotor only)
+  tau_max_wheel: 0.05         # Nm (wheel-side hard torque limit)
+  # Disturbance parameters
+  cogging_amplitude: 0.0005   # Nm at wheel
+  cogging_slots: 6
+  gear_noise_std: 0.0002      # Nm at wheel
+
+tire:
+  # Silicone skin + foam inner on track surface
+  friction_tangential: 1.3    # Silicone on typical track surface
+  friction_torsional: 0.008   # Foam torsional compliance
+  friction_rolling: 0.0008    # Foam hysteresis rolling resistance
+  # Deformation
+  deformation_k: 2.0e-5       # m/N, radius reduction per newton normal force
+  scale_error_std: 0.002      # 0.2% wheel radius uncertainty (systematic)
+  slip_noise_std: 0.0015      # 0.15% per-step velocity noise (random)
+  solref_timeconst: 0.001     # contact solver time constant (matches XML)
+  solref_dampratio: 1.0       # contact solver damping ratio
+  # Disturbance
+  mu_variation_std: 0.05      # std of friction coefficient variation
+  radius_variation_std: 5.0e-5 # m, effective radius variation
+
+imu:
+  gyro_noise_density: 0.00105       # rad/s/√Hz
+  gyro_bias_instability: 3.88e-6    # rad/s
+  gyro_random_walk: 2.91e-7         # rad/s/√s
+  gyro_range_dps: 2000.0
+  accel_noise_density: 6.86e-4      # m/s²/√Hz
+  accel_bias_instability: 1.47e-4   # m/s²
+  accel_random_walk: 1.47e-4        # m/s²/√s
+  accel_range_g: 16.0
+  quantization_bits: 16
+  odr_hz: 4000                      # output data rate
+
+encoder:
+  cpr: 4000
+  sampling_rate_hz: 1000
+
+linesensor:
+  n_sensors: 16
+  total_width: 0.130           # m
+  lookahead: 0.050             # m
+  line_half_width: 0.010       # m
+  noise_std: 0.02              # normalized [0,1]
+  adc_bits: 16
+  sampling_rate_hz: 1000
+
+control:
+  rate_hz: 1000
+
+track:
+  file: "robotena_points.txt"
+  width: 0.180                 # m (standard half-size micromouse cell)
+  wall_height: 0.050           # m
+  wall_thickness: 0.012        # m
+
+simulation:
+  duration: 10.0               # s
+  render: true
