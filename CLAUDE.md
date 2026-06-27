@@ -15,6 +15,7 @@ Key rule: write or update the module contract and verification plan first, then 
 - Current Git remote: `https://github.com/Ayanamni/micro_mouse.git`, branch `main`.
 - Do not force-push or rewrite history unless the user explicitly asks.
 - Current controller roadmap is paused at the planning boundary: next implementation work starts from `控制器方案报告.md` section 24 and `gpt计划.md` section "2026-06-28 修订计划"; do not implement TD/DOB/controller rewrites until the user resumes that work.
+- If asked to run continuously until the controller is complete, follow `项目维护协议.md` section 7: write the 6-line execution state each round, make one type of change at a time, run required verification, and switch to diagnosis after repeated non-improvement.
 
 ## Project Overview
 
