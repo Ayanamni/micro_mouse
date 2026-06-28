@@ -13,7 +13,7 @@ Key rule: write the 6-line execution state first, make one type of change, run r
 - Shared protocol: `项目维护协议.md`.
 - Remote: `https://github.com/Ayanamni/micro_mouse.git`, branch `main`; do not force-push unless explicitly asked.
 - Active path: `control_core.vw_omega_step` / `vw_control_tick`, not legacy `control_core.step`.
-- Continuous execution must satisfy response-speed gates: rise time, settling time, overshoot, steady-state error, and closed-loop bandwidth.
+- Continuous execution priority: bandwidth/response time first, small overshoot second, max omega/speed range last; gates include rise time, settling time, overshoot, steady-state error, and closed-loop bandwidth.
 - Line-following `eval_vw.py single/sweep` remains paused until the user clearly releases that constraint.
 
 ## Project Overview
